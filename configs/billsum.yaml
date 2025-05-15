@@ -12,14 +12,14 @@ dataset:
   summary_col: "summary"
   max_input_tokens: 512
   max_target_tokens: 128
-  sample_size: 800
+  sample_size: 200
   filter_by_length: true
 
 split:
-  train_frac: 0.9
+  train_frac: 0.8
 
 prompt:
-  prefix: "Summarize: "
+  prefix: "Summarize this legal document:\n"
 
 lora:
   r: 8
@@ -29,14 +29,14 @@ lora:
   bias: "none"
 
 training:
-  batch_size: 4
-  eval_batch_size: 4
-  grad_accum_steps: 4
-  epochs: 3
+  batch_size: 1
+  eval_batch_size: 1
+  grad_accum_steps: 2
+  epochs: 1
   lr: 5e-4
   weight_decay: 0.01
   warmup_steps: 100
-  fp16: true
+  fp16: false # colab only
   logging_steps: 50
   evaluation_strategy: "steps"
   eval_steps: 500
@@ -46,7 +46,7 @@ training:
   greater_is_better: true
   report_to: "none"
   load_best_model_at_end: true
-  gradient_checkpointing: true
+  gradient_checkpointing: flase // colab only
 
 generation:
   num_beams: 4
