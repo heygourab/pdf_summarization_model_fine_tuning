@@ -1,0 +1,61 @@
+version: "1.0"
+model:
+  name: "google/flan-t5-base"
+  loading_args:
+    low_cpu_mem_usage: true
+    device_map: "auto"
+dataset:
+  name: "billsum"
+  text_col: "text"
+  summary_col: "summary"
+  max_input_tokens: 512
+  max_target_tokens: 128
+  sample_size: 800
+  filter_by_length: true
+split:
+  train_frac: 0.9
+prompt:
+  prefix: "Summarize the following legal document: "
+lora:
+  r: 8
+  alpha: 32
+  target_modules: ["q", "v"]
+  dropout: 0.1
+  bias: "none"
+training:
+  batch_size: 4 # per device batch size, if hit out of memory, try 2
+  gradient_checkpointing: true
+  eval_batch_size: 4
+  grad_accum_steps: 4
+  epochs: 3
+  lr: 5e-4
+  weight_decay: 0.01
+  warmup_steps: 100
+  fp16: true
+  logging_steps: 50
+  evaluation_strategy: "steps"
+  eval_steps: 500
+  save_strategy: "steps"
+  save_steps: 500
+  metric_for_best: "rougeL_f1"
+  greater_is_better: true
+  report_to: "none"
+  load_best_model_at_end: true
+generation:
+  num_beams: 4
+  length_penalty: 1.0
+  early_stopping: true
+preprocessing:
+  num_proc: 2
+output_dir: "lora_billsum"
+add_timestamp_to_output: true
+resume_from_checkpoint: false
+generate_examples: true
+print_eval_examples: true
+seed: 42
+colab:
+  mount_drive: true
+  save_to_drive: true
+  drive_path: "MyDrive/ML_models"
+  required_packages: ["evaluate", "peft", "omegaconf"]
+  restart_runtime: false
