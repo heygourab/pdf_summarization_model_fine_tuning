@@ -1,0 +1,12 @@
+# Requirements for M-series Mac (Apple Silicon)
+torch>=2.0.0  # PyTorch with MPS support for Apple Silicon
+transformers>=4.30.0
+datasets>=2.12.0
+evaluate>=0.4.0
+accelerate>=0.20.0
+peft>=0.3.0
+omegaconf>=2.3.0
+pandas>=2.0.0
+matplotlib>=3.7.0
+psutil>=5.9.0
+--extra-index-url https://download.pytorch.org/whl/nightly/cpu  # Ensures proper PyTorch builds for Apple Silicon
