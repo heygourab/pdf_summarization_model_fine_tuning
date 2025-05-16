@@ -1,13 +1,28 @@
-# Requirements for M-series Mac (Apple Silicon)
-torch>=2.0.0  # PyTorch with MPS support for Apple Silicon
-transformers>=4.30.0
-datasets>=2.12.0
-evaluate>=0.4.0
-accelerate>=0.20.0
-peft>=0.3.0
-omegaconf>=2.3.0
-pandas>=2.0.0
-matplotlib>=3.7.0
-psutil>=5.9.0
-hf_xet>=0.3.0
---extra-index-url https://download.pytorch.org/whl/nightly/cpu  # Ensures proper PyTorch builds for Apple Silicon
+# Core deep learning stack (optimized for M1/M2/M3 with Metal backend)
+torch>=2.0.0                  # PyTorch with MPS support — Apple's GPU backend
+transformers>=4.30.0          # HuggingFace Transformers — must-have for LLMs, T5, BERT, etc.
+datasets>=2.12.0              # HuggingFace Datasets
+evaluate>=0.4.0               # Metric computation library (ROUGE, BLEU, etc)
+accelerate>=0.20.0            # HuggingFace Accelerate
+
+# LoRA + Parameter-Efficient Tuning
+peft>=0.3.0                   # PEFT from HuggingFace — LoRA, prefix tuning, etc.
+
+# Configuration and analysis tools
+omegaconf>=2.3.0              # Hydra-style structured config system — used in your pipeline
+pandas>=2.0.0                 # DataFrames for metrics/logs — works beautifully with CSVs
+matplotlib>=3.7.0             # plotting loss/metrics graphs — integrates with Jupyter or saves to PNGs
+psutil>=5.9.0                 # system info / memory monitoring
+
+# HuggingFace XET: External model pushing/pulling tool (optional but powerful)
+hf_xet>=0.3.0                 # HuggingFace + git-lfs for large model versioning — handy for serious model ops
+
+# Quantization / low-precision memory optimization
+bitsandbytes>=0.39.0         # Optional 8-bit optimizers and quantization — mostly for NVIDIA but may work under CPU
+
+# Notebook UI enhancements
+ipywidgets                   # Makes Jupyter/Colab widgets work (sliders, dropdowns, progress bars)
+
+# Additional index for Apple Silicon compatibility
+--extra-index-url https://download.pytorch.org/whl/nightly/cpu
+# ^ Nightly PyTorch wheels – crucial if stable build lags behind for MPS/Apple fixes
