@@ -42,9 +42,9 @@ training:
   weight_decay: 0.01
   warmup_steps: 100
   fp16: false
-  logging_steps: 50
+  logging_steps: 10
   evaluation_strategy: "steps"
-  eval_steps: 500
+  eval_steps: 100
   save_strategy: "steps"  # Save model checkpoints every few steps
   save_steps: 500
   metric_for_best: "rougeL_f1"
