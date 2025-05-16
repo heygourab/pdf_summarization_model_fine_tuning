@@ -1,52 +1,58 @@
 version: "1.0"
 
+# Model
 model:
   name: "google/flan-t5-base"
   loading_args:
-    low_cpu_mem_usage: true
-    device_map: "auto"
+    low_cpu_mem_usage: false #
+    device_map: "auto" # Automatically picks GPU/CPU for layers – helps with Colab or hybrid setups
 
+# Dataset
 dataset:
   name: "billsum"
-  text_col: "text"
-  summary_col: "summary"
+  text_col: "text" # Column with full legal text
+  summary_col: "summary" # Column with target summary
   max_input_tokens: 512
   max_target_tokens: 128
-  sample_size: 200
+  sample_size: 200 # reduce to 200 samples for quick training | original 800 colab
   filter_by_length: true
 
 split:
-  train_frac: 0.8
+  train_frac: 0.8 # 80% for training, 20% for evaluation 
 
 prompt:
   prefix: "Summarize this legal document:\n"
 
 lora:
-  r: 8
-  alpha: 32
-  target_modules: ["q", "v"]
+  r: 8 # LoRA rank – smaller = lighter adapter
+  alpha: 32 # Scaling factor for LoRA – balances update magnitude
+  # Apply LoRA to attention query/value projections – classic efficient setup 
+  target_modules: ["q", "v"] 
+  # Dropout during LoRA training – regularizes fine-tuning
   dropout: 0.1
+  # Don’t tune base model biases – reduces memory and overfitting risk
   bias: "none"
 
 training:
   batch_size: 1
-  eval_batch_size: 1
-  grad_accum_steps: 2
-  epochs: 1
-  lr: 5e-4
+  eval_batch_size: 2
+  grad_accum_steps: 1
+  epochs: 3
+  lr: 2e-4
   weight_decay: 0.01
   warmup_steps: 100
-  fp16: false # colab only
+  fp16: false
   logging_steps: 50
   evaluation_strategy: "steps"
   eval_steps: 500
-  save_strategy: "steps"
+  save_strategy: "steps"  # Save model checkpoints every few steps
   save_steps: 500
   metric_for_best: "rougeL_f1"
   greater_is_better: true
   report_to: "none"
   load_best_model_at_end: true
-  gradient_checkpointing: flase // colab only
+  gradient_checkpointing: false
+  overwrite_output_dir: true
 
 generation:
   num_beams: 4
@@ -56,20 +62,20 @@ generation:
 preprocessing:
   num_proc: 2
 
-output_dir: "lora_billsum"
+output_dir: "lora_billsum" 
 add_timestamp_to_output: true
 resume_from_checkpoint: false
 
 generate_examples: true
 print_eval_examples: true
-seed: 42
+seed: 42 # Set seed for reproducibility – meme number :)
 
 colab:
-  mount_drive: true
-  save_to_drive: true
+  mount_drive: true # Mount GDrive to save stuff
+  save_to_drive: true 
   drive_path: "MyDrive/ML_models"
   required_packages:
     - evaluate
     - peft
     - omegaconf
-  restart_runtime: false
+  restart_runtime: false  # Skip runtime restart – only needed for some installs
