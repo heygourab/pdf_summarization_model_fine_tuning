@@ -56,3 +56,4 @@ logs/
 .Python
 dist/
 downloads/
+.DS_Store
