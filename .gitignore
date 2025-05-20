@@ -57,3 +57,5 @@ logs/
 dist/
 downloads/
 .DS_Store
+wandb/
+*.wandb
